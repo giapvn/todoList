@@ -1,0 +1,19 @@
+function TaskManagement(connection){
+	this.connection = connection;
+};
+
+TaskManagement.prototype.insertTask = function(task, callback){
+	
+	var collection = this.connection.collection('task');
+	var tasks = {
+		description: task.getDescription
+	};
+	collection.insert(tasks,function(err,result){
+		if(err) {
+			return callback(true, null);
+		}
+		return callback(false, result);
+	});
+}
+
+module.exports = TaskManagement
