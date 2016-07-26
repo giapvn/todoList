@@ -1,0 +1,10 @@
+{
+	"mongodb" : {
+		"host" : "local",
+		"port" : "27017",
+		"dbname" : "test"
+	},
+	"postgres" : {
+		"connectionString" : ""
+	}
+}
