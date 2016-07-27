@@ -8,7 +8,7 @@ var task = new Task();
 exports.postingTask = function(req,res){
 
 	var description = req.body.description || '';
-	task = req.body;
+	task.setDesciption(description);
 	if(task === ''){
 		return res.sendStatus(400);
 	}
