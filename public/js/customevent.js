@@ -20,7 +20,7 @@ function toDoFeature(){
 	    }
 		var action = {
 			description: $textboxTask.val(),
-			type_action: 'added task',
+			action_type: 'added task',
 			activation_time: new Date()
 		};
 		
@@ -33,7 +33,7 @@ function toDoFeature(){
 	        	var action = {
 	        		description: $(this).parent().find("span").text(),
 	        		task: $(this).parent(),
-	        		type_action: 'deleted task',
+	        		action_type: 'deleted task',
 	        		activation_time: new Date()
 	        	}
 	        	$listTasks.trigger("task:delete", action);
@@ -78,7 +78,7 @@ function toDoFeature(){
 		var action = {
 		description: $(this).parent().find("span").text(),
 		task: $(this).parent(),
-		type_action: 'deleted task',
+		action_type: 'deleted task',
 		activation_time: new Date()
 		}
 		$listTasks.trigger("task:delete", action);
@@ -95,14 +95,14 @@ function toDoFeature(){
     	    $task.addClass("done");
     	    action = {
     	    	description: $task.text(),
-    	    	type_action: "checked task",
+    	    	action_type: "checked task",
     	    	activation_time: new Date()
     	    }
     	}else{    		
         	$task.removeClass("done");
     		action = {
     	    	description: $task.text(),
-    	    	type_action: "unchecked task",
+    	    	action_type: "unchecked task",
     	    	activation_time: new Date()
     	    }
     	} 
@@ -113,7 +113,7 @@ function toDoFeature(){
 		action.task.remove();
 		var action = {
 			description: action.description,
-    	    type_action: action.type_action,
+    	    action_type: action.action_type,
     	    activation_time: action.activation_time
 		}
 		postAction(action);
@@ -131,7 +131,7 @@ function toDoFeature(){
             contentType: 'application/json',
             success: function(result) {
                 $.each(result, function(i, value){
-                	console.log(i+" : You "+value.type_action + " *"+ value.description +"* at "+value.activation_time);
+                	console.log(i+" : You "+value.action_type + " *"+ value.description +"* at "+value.activation_time);
                 });
             }
         });
