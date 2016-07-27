@@ -1,58 +1,11 @@
-/*css for header*/
-#navbar1{
-	margin-bottom: 0px;
-	background: #FFFFFF;
-	box-shadow: 0px 2px 2px rgba(0,0,0,0.5);
-}
-#navbar1 img{
-	height: 15px;
+#header{
+    margin-bottom: 50px;
 }
 
-#navbar1 ul:first-child{
-    margin-top: 15px;
-    margin-left: 30px;
+#body input{
+    margin-right: 20px;
 }
 
-#navbar1 .btn-right{
-    margin-top: 7px;
-}
-
- /*------navbar 1 done------*/
-
-#navbar2{
-	margin-bottom: 0px;
-    background: #2a3a42;
-}
-
-#navbar2 img{
-	height: 40px;
-}
-
-#navbar2 .navbar-header{
-	margin-bottom: 18px;
-}
-#navbar2 .btn-right button{
-    margin-top: 17px;
-    margin-right: 5px;
-}
-
-/*css for body*/
-
-.jumbotron{
-	text-align: center;
-	color: #FFFFFF;
-	background: #63AFC7 url('../img/bg.png') center no-repeat;
-	background-size: cover;
-	margin-bottom: 0px;
-}
-
-#intro{	
-    margin-left: 40px;
-    margin-right: 40px;
-}
-
-#intro img{
-	display: block;
-    margin-left: auto;
-    margin-right: auto;
+.done{
+	text-decoration: line-through;
 }
