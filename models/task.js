@@ -1,4 +1,5 @@
 'use strict'
+
 function Task(){};
 
 Task.prototype.setDesciption = function(description){
@@ -18,3 +19,4 @@ Task.prototype.getDesciption = function(){
 // };
 
 module.exports = Task;
+
