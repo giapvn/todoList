@@ -10,10 +10,7 @@ TaskManagement.prototype.insertTask = function(description, callback){
 	};
 	console.log(tasks);
 	collection.insert(tasks,function(err,result){
-		if(err) {
-			return callback(true, null);
-		}
-		return callback(false, result);
+		return callback(err, result);
 	});
 }
 
@@ -23,9 +20,9 @@ TaskManagement.prototype.getTasks = function(callback){
 	var tasks = collection.find().toArray(function(err, result){
 		// var result = "Successful!";
 		if(!err){
-			return callback(true, result);
+			return callback(false, result);
 		}
-		return callback(false, null);
+		return callback(true, null);
 	});
 };
 

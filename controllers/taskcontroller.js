@@ -27,17 +27,13 @@ module.exports.insertTask = function(req,res){
 
 
 module.exports.sendResult = function(req, res){
-	// for(task in taskManagement){
-	// 	console.log(task);
-	// 	console.log('--------------');
-	// 	return res.status(200).send();
-	// }
+	
 	taskManagement.getTasks(function(err,result){
-		if(true){
-			console.log(result);
-			return null;
+		if(err){
+			res.status(500).send("Error on server");
+		}else{
+			res.status(200).send(result);
 		}
-		return res.status(404).send();
 	});
 };
 
