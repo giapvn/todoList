@@ -2,13 +2,15 @@ function TaskManagement(connection){
 	this.connection = connection;
 };
 
-TaskManagement.prototype.insertTask = function(description, callback){
-	
+TaskManagement.prototype.insertTask = function(task, callback){
+
 	var collection = this.connection.collection('task');
 	var tasks = {
-		description: description
+		description: task.getDescription(),
+		action_type: task.getActionType(),
+		activation_time: task.getActivationTime(),
 	};
-	console.log(tasks);
+	
 	collection.insert(tasks,function(err,result){
 		return callback(err, result);
 	});
