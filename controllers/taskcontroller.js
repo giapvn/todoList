@@ -9,15 +9,19 @@ var task = new Task();
 module.exports.insertTask = function(req,res){
 
 	var description = req.body.description || '';
-	// task.setDesciption(description);
 
-	// console.log(task.getDescription);
-	console.log(description);
+	task.setDescription(description);
+	
+	console.log("*******");
+	console.log(task);
+	console.log("*******");
+	console.log("*******");
+	console.log(task.getDesciption);
 	if(description === ''){
 		return res.sendStatus(400);
 	}
 	
-	taskManagement.insertTask(description,function(err,result){
+	taskManagement.insertTask(task,function(err,result){
 		if(err){
 			return res.status(500).send();
 		}

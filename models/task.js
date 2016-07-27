@@ -1,8 +1,10 @@
 'use strict'
 
-function Task(){};
+function Task(){
 
-Task.prototype.setDesciption = function(description){
+};
+
+Task.prototype.setDescription = function(description){
 	this.description = description;
 };
 
@@ -10,7 +12,7 @@ Task.prototype.setDesciption = function(description){
 // 	this.activation_time = activation_time;
 // };
 
-Task.prototype.getDesciption = function(){
+Task.prototype.getDescription = function(){
 	return this.description;
 };
 
