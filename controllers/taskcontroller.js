@@ -4,19 +4,20 @@ var database = require('../db/mongo.service.js');
 var TaskManagement = require('../models/taskmanagement.js');
 var connection = database.getConnection();	
 var taskManagement = new TaskManagement(connection);
-
+var task = new Task();
 
 module.exports.insertTask = function(req,res){
 
 	var description = req.body.description || '';
-	var task = new Task();
-	task.setDesciption(description);
+	// task.setDesciption(description);
+
 	// console.log(task.getDescription);
-	if(task === ''){
+	console.log(description);
+	if(description === ''){
 		return res.sendStatus(400);
 	}
 	
-	taskManagement.insertTask(task,function(err,result){
+	taskManagement.insertTask(description,function(err,result){
 		if(err){
 			return res.status(500).send();
 		}

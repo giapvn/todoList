@@ -2,12 +2,13 @@ function TaskManagement(connection){
 	this.connection = connection;
 };
 
-TaskManagement.prototype.insertTask = function(task, callback){
+TaskManagement.prototype.insertTask = function(description, callback){
 	
 	var collection = this.connection.collection('task');
 	var tasks = {
-		description: task.getDescription
+		description: description
 	};
+	console.log(tasks);
 	collection.insert(tasks,function(err,result){
 		if(err) {
 			return callback(true, null);
