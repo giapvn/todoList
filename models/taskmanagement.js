@@ -6,7 +6,9 @@ TaskManagement.prototype.insertTask = function(task, callback){
 
 	var collection = this.connection.collection('task');
 	var tasks = {
-		description: task.getDescription()
+		description: task.getDescription(),
+		action_type: task.getActionType(),
+		activation_time: task.getActivationTime(),
 	};
 	
 	collection.insert(tasks,function(err,result){

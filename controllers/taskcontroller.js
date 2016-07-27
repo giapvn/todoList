@@ -9,15 +9,16 @@ var task = new Task();
 module.exports.insertTask = function(req,res){
 
 	var description = req.body.description || '';
+	var action_type = req.body.action_type || '';
+	var activation_time = req.body.activation_time || '';
+
 
 	task.setDescription(description);
+	task.setActionType(action_type);
+	task.setActivationTime(activation_time);
 	
-	console.log("*******");
-	console.log(task);
-	console.log("*******");
-	console.log("*******");
-	console.log(task.getDesciption);
-	if(description === ''){
+
+	if(task === ''){
 		return res.sendStatus(400);
 	}
 	
