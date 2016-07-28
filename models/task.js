@@ -1,29 +1,36 @@
 'use strict'
 
 function Task(){
+	this.description = null;
+	this.status = {
+		checked: false,
+		deleted: false
+	}
+};
 
+Task.prototype.setID = function(_id){
+	this._id = _id;
+};
+
+Task.prototype.getID = function(){
+	return this._id;
 };
 
 Task.prototype.setDescription = function(description){
 	this.description = description;
 };
 
-Task.prototype.setActivationTime =function(activation_time){
-	this.activation_time = activation_time;
-};
-Task.prototype.setActionType =function(action_type){
-	this.action_type = action_type;
-};
-
 Task.prototype.getDescription = function(){
 	return this.description;
 };
 
-Task.prototype.getActivationTime = function(){
-	return this.activation_time;
+Task.prototype.setStatus = function(status){
+	this.status.checked = status.checked;
+	this.status.deleted = status.deleted;
 };
-Task.prototype.getActionType = function(){
-	return this.action_type;
+
+Task.prototype.getStatus = function(){
+	return this.status;
 };
 
 module.exports = Task;

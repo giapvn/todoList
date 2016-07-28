@@ -5,13 +5,8 @@ function TaskManagement(connection){
 TaskManagement.prototype.insertTask = function(task, callback){
 
 	var collection = this.connection.collection('task');
-	var tasks = {
-		description: task.getDescription(),
-		action_type: task.getActionType(),
-		activation_time: task.getActivationTime(),
-	};
-	
-	collection.insert(tasks,function(err,result){
+		
+	collection.insert(task,function(err,result){
 		return callback(err, result);
 	});
 }
@@ -19,14 +14,16 @@ TaskManagement.prototype.insertTask = function(task, callback){
 
 TaskManagement.prototype.getTasks = function(callback){
 	var collection = this.connection.collection('task');
-	var tasks = collection.find().toArray(function(err, result){
-		// var result = "Successful!";
-		if(!err){
-			return callback(false, result);
-		}
-		return callback(true, null);
+	collection.find().toArray(function(err, tasks){
+		return callback(err, tasks);
 	});
 };
 
+TaskManagement.prototype.editTask = function(selector, doc, callback){
+	var collection = this.connection.collection('task');
+	collection.updateOne(selector, {$set: doc},function(err, result){
+		return callback(err, result);
+	});
+};
 
-module.exports = TaskManagement
+module.exports = TaskManagement;

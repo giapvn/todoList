@@ -120,18 +120,20 @@ function toDoFeature(){
 	};  	
 
 // use Ajax to push request 
+	var $history = $("#history");
 	var $getHistory= $("#button-get-history");
-	$getHistory.click(getAllAction);
-	function getAllAction(){
+	$getHistory.click(getAllActions);
+	function getAllActions(){
 		console.log("=======>  get all action \n");
 		$.ajax({
-            url: "http://localhost:3000/api/tasks",
+            url: "http://localhost:3000/api/actions",
             dataType: "json",
             type: 'GET',
             contentType: 'application/json',
             success: function(result) {
+            	$history.find("li").remove();
                 $.each(result, function(i, value){
-                	console.log(i+" : You "+value.action_type + " *"+ value.description +"* at "+value.activation_time);
+                	$history.append("<li class='list-group-item'>"+i+" : You "+value.action_type + " *"+ value.description +"* at "+value.activation_time+"</li>");
                 });
             }
         });
@@ -140,7 +142,7 @@ function toDoFeature(){
 	function postAction(action){
 		console.log("=======> post action ")
 		$.ajax({
-			url: "http://localhost:3000/api/tasks",
+			url: "http://localhost:3000/api/actions",
 			dataType: "json",
 			type:'post',
 			contentType: 'application/json',

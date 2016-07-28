@@ -1,26 +1,23 @@
 
 var Task = require('../models/task.js');
+var ObjectID = require('mongodb').ObjectID;
 var database = require('../db/mongo.service.js');
 var TaskManagement = require('../models/taskmanagement.js');
 var connection = database.getConnection();	
 var taskManagement = new TaskManagement(connection);
-var task = new Task();
 
 module.exports.insertTask = function(req,res){
 
-	var description = req.body.description || '';
-	var action_type = req.body.action_type || '';
-	var activation_time = req.body.activation_time || '';
+	var body = req.body || '';
 
-
-	task.setDescription(description);
-	task.setActionType(action_type);
-	task.setActivationTime(activation_time);
-	
-
-	if(task === ''){
+	if(body === ''){
 		return res.sendStatus(400);
 	}
+
+	var task = new Task();
+	task.setID(new ObjectID());
+	task.setDescription(body.description);
+	task.setStatus(body.status);	
 	
 	taskManagement.insertTask(task,function(err,result){
 		if(err){
@@ -30,14 +27,30 @@ module.exports.insertTask = function(req,res){
 	});
 }
 
+module.exports.editTask = function(req, res){
+	var updatedTask = req.body || '';
+	if(updatedTask === ''){
+		return res.sendStatus(400);
+	} 
+	console.log(updatedTask);
+	var _id = ObjectID(updatedTask._id);
+	delete updatedTask._id;
+	console.log(updatedTask);
+	taskManagement.editTask({"_id": _id}, updatedTask, function(err, result){
+		if(err){
+			return res.status(500).send();
+		}
+		return res.status(201).send(result);
+	})
+};
 
-module.exports.sendResult = function(req, res){
+module.exports.getTasks = function(req, res){
 	
-	taskManagement.getTasks(function(err,result){
+	taskManagement.getTasks(function(err,tasks){
 		if(err){
 			res.status(500).send("Error on server");
 		}else{
-			res.status(200).send(result);
+			res.status(200).send(tasks);
 		}
 	});
 };
