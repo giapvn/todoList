@@ -7,8 +7,15 @@ var mongoService = require('./db/mongo.service');
 
 var connectionString = "mongodb://"+dbConfig.mongodb.host+":"+dbConfig.mongodb.port+"/"+dbConfig.mongodb.dbname;
 
-
 var app = express();
+// set up handlebars view engine
+var handlebars = require('express3-handlebars').create({
+	defaultLayout: 'main',
+	extname: '.html',
+});
+
+app.engine('html', handlebars.engine);
+app.set('view engine', 'html');
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
@@ -17,9 +24,9 @@ app.use(bodyParser.json());
 // set api
 // app.use('/api', api);
 // set route link to home.html
-app.get('/home', function(req, res){
-	res.sendFile(__dirname + "/views/home.html");
-});
+// app.get('/home', function(req, res){
+// 	res.sendFile(__dirname + "/views/home.html");
+// });
 
 // start connection mongodb and starting app
 
@@ -30,6 +37,7 @@ mongoService.connect(connectionString, function(err){
 		process.exit(1);
 	} else{
 		app.use('/api', require('./api/api'));
+		app.use(require('./controllers/index.js'))
 		// var collection = mongoService.getConnection().collection('task');
 		// console.log(collection);
 		app.listen(app.get('port'), function(){

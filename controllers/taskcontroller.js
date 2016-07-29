@@ -55,3 +55,15 @@ module.exports.getTasks = function(req, res){
 	});
 };
 
+module.exports.loadHomePage = function(req, res){
+	var queryString = {"status.deleted": false};
+	taskManagement.getTasks(queryString,function(err,tasks){
+		if(err){
+			res.status(500).send("Error on server");
+		}else{			
+			res.status(200);
+			res.render('home', {tasks : tasks});
+		}
+	});
+};
+

@@ -1,3 +1,4 @@
+var isLoaded = false;
 $(document).ready(toDoFeature);
 
 function toDoFeature(){
@@ -6,7 +7,15 @@ function toDoFeature(){
 	var $textboxTask  = $("#textbox-task");
 	var $listTasks = $("#list-tasks");
 	var KEY_ENTER = 13;
-	var index = 0;
+	
+	if(!isLoaded){
+		$listTasks.find("a").each(function(index){
+			$(this).find("button").click(toTriggerDeleteTask);
+		    $(this).find("input").change(doneTask);
+		    console.log( $(this).find("span").text());
+		});
+		isLoaded = true;
+	}
 
 	$buttonAddTask.click(toTriggerAddTask);
 	$buttonDeleteTasksChecked.click(toTriggerDeleteTasksChecked);
@@ -75,7 +84,6 @@ function toDoFeature(){
   	$listTasks.on("task:delete", deleteTaskFromList);
 
   	function addTaskToList(event, data){
-		index += 1;
 	    $(this).prepend(
 	    		"<a href='#' class='list-group-item'>"+
 					"<input type='checkbox' class='delete'>"+
