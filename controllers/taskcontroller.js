@@ -45,8 +45,8 @@ module.exports.editTask = function(req, res){
 };
 
 module.exports.getTasks = function(req, res){
-	
-	taskManagement.getTasks(function(err,tasks){
+	var queryString = {"status.deleted": false};
+	taskManagement.getTasks(queryString,function(err,tasks){
 		if(err){
 			res.status(500).send("Error on server");
 		}else{

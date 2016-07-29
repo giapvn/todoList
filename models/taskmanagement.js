@@ -9,12 +9,16 @@ TaskManagement.prototype.insertTask = function(task, callback){
 	collection.insert(task,function(err,result){
 		return callback(err, result);
 	});
-}
+};
 
-
-TaskManagement.prototype.getTasks = function(callback){
+TaskManagement.prototype.getTasks = function(queryString,callback){
 	var collection = this.connection.collection('task');
-	collection.find().toArray(function(err, tasks){
+	collection.find(queryString).toArray(function(err, tasks){
+		if(tasks.length == 0){
+			console.log("cannot found");
+		}else{
+			console.log(tasks);
+		}
 		return callback(err, tasks);
 	});
 };
