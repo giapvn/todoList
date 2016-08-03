@@ -8,7 +8,7 @@ var mongoService = require('./db/mongo.service');
 var connectionString = "mongodb://"+dbConfig.mongodb.host+":"+dbConfig.mongodb.port+"/"+dbConfig.mongodb.dbname;
 
 var app = express();
-// set up handlebars view engine
+
 var handlebars = require('express3-handlebars').create({
 	defaultLayout: 'main',
 	extname: '.html',
@@ -37,7 +37,7 @@ mongoService.connect(connectionString, function(err){
 		process.exit(1);
 	} else{
 		app.use('/api', require('./api/api'));
-		app.use(require('./controllers/index.js'))
+		app.use(require('./controllers/index.js'));
 		// var collection = mongoService.getConnection().collection('task');
 		// console.log(collection);
 		app.listen(app.get('port'), function(){
@@ -45,4 +45,3 @@ mongoService.connect(connectionString, function(err){
 		});
 	}
 });
-	
