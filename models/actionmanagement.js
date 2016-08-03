@@ -18,15 +18,19 @@ ActionManagement.prototype.insertAction = function(action, callback){
 	collection.insert(newAction).then(insertSuccess).catch(insertFalse);
 }
 
+var notifyGetActionSuccess = function(result){
+	return callback(false, result);
+}
+
+var notifyGetActionFail = function(err){
+	return callback(err, null);
+}
+
 ActionManagement.prototype.getActions = function(callback){
 	var collection = this.connection.collection('action');
 	var actions = collection.find().toArray()
-		.then(function(result){
-			return callback(false, result);
-		})
-		.catch(function(err){
-			return callback(err, null);
-		});
+		.then(notifyGetActionSuccess)
+		.catch(notifyGetActionFail)
 };
 
 module.exports = ActionManagement;
