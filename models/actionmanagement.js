@@ -30,7 +30,7 @@ ActionManagement.prototype.getActions = function(callback){
 	var collection = this.connection.collection('action');
 	var actions = collection.find().toArray()
 		.then(notifyGetActionSuccess)
-		.catch(notifyGetActionFail);
+		.catch(notifyGetActionFail)
 };
 
 module.exports = ActionManagement;
