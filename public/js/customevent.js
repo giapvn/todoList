@@ -1,5 +1,14 @@
-var isLoaded = false;
-$(document).ready(toDoFeature);
+
+;
+(function(functionAsParam){
+	functionAsParam(window.jQuery, window, document);
+}(function($, window, document){
+	// listen for the jQuery ready event on the document
+	$(function() {
+		// The DOM is ready!
+		toDoFeature();
+	});
+}));
 
 function toDoFeature(){
 	var $buttonAddTask = $("#button-add-task");
@@ -7,23 +16,27 @@ function toDoFeature(){
 	var $textboxTask  = $("#textbox-task");
 	var $listTasks = $("#list-tasks");
 	var KEY_ENTER = 13;
-	
-	if(!isLoaded){
-		$listTasks.find("a").each(function(index){
-			$(this).find("button").click(toTriggerDeleteTask);
-		    $(this).find("input").change(doneTask);
-		    console.log( $(this).find("span").text());
-		});
-		isLoaded = true;
-	}
+	var $checkboxDoneTask = $(".checkbox-done-task");
+	var $buttonDeleteTaskItem = $(".btn-delete-task-item");
+	var $history = $("#history");
+	var $buttonGetHistory= $("#button-get-history");
 
-	$buttonAddTask.click(toTriggerAddTask);
-	$buttonDeleteTasksChecked.click(toTriggerDeleteTasksChecked);
+	// bind event for rendered element initially
+	$checkboxDoneTask.on('change', doneTask);
+	$buttonDeleteTaskItem.on('click', toTriggerDeleteTask);
+	$buttonAddTask.on('click', toTriggerAddTask);
+	$buttonDeleteTasksChecked.on('click', toTriggerDeleteTasksChecked);
 	$textboxTask.keypress(enterToTriggerButtonAddTask);
+	$buttonGetHistory.on('click', toTriggerGetHistory);
+	
+  	// listen custom event
+
+  	$listTasks.on("task:add", addTaskToList);
+  	$listTasks.on("task:delete", deleteTaskFromList);
 
 	function toTriggerAddTask(){
 		if($textboxTask.val() == ""){
-	      alert("Please type task on textbox");
+	      alert("Please type a task on textbox");
 	      $textboxTask.focus();
 	      return false;
 	    }
@@ -47,7 +60,7 @@ function toDoFeature(){
 	};
 
 	function toTriggerDeleteTasksChecked(){
-		$(".delete").each(function deleteTasksChecked(){
+		$(".checkbox-done-task").each(function deleteTasksChecked(){
 	        if($(this).is(":checked")){
 	        	var data = {
 	        		action: {
@@ -78,31 +91,40 @@ function toDoFeature(){
 		$buttonAddTask.trigger("click");
 	};		
 
-  	// listen event
-
-  	$listTasks.on("task:add", addTaskToList);
-  	$listTasks.on("task:delete", deleteTaskFromList);
 
   	function addTaskToList(event, data){
 	    $(this).prepend(
 	    		"<a href='#' class='list-group-item'>"+
-					"<input type='checkbox' class='delete'>"+
+					"<input type='checkbox' class='checkboxDoneTask'>"+
 					"<span>"+data.task.description+"</span>"+
 					"<label class='hidden'>"+data.task._id+"</label>"+
-					"<button class='pull-right btn-default'>X</button>"+
+					"<button class='pull-right btn-default btn-delete-task-item'>X</button>"+
 				"</a>"
 	    	);
 
 	    var $newItem = $("#list-tasks a:first-child");
 
-	    $newItem.find("button").click(toTriggerDeleteTask);
-	    $newItem.find("input").change(doneTask);
+	    $newItem.find("button").on('click', toTriggerDeleteTask);
+	    $newItem.find("input").on('change',doneTask);
 	    $textboxTask.val("");
 	    $textboxTask.focus();
 
 		addAction(data.action);
-		addTaskToServer(data.task);
+		addTaskToServer(data.task).done(setHiddenId).fail(alertToNoticeAddTaskFailed);
 	};
+
+	function toTriggerGetHistory(){
+		getHistory().done(showHistory);
+	};
+
+	function setHiddenId(data,  textStatus, jQxhr){
+		var $newItem = $("#list-tasks a:first-child");
+		$newItem.find("label").text(data.insertedIds[0]);
+	};	
+
+	function alertToNoticeAddTaskFailed(jqXhr, textStatus, errorThrown){
+		alert(errorThrown);
+	}
 
 	function toTriggerDeleteTask(){
 		
@@ -124,10 +146,6 @@ function toDoFeature(){
     	};
 		$listTasks.trigger("task:delete", data);
 	}
-
-	// function deleteTask(){
- //    	$(this).parent().remove();
-	// };
 
   	function doneTask(){
   		var $task = $(this).parent();
@@ -166,77 +184,50 @@ function toDoFeature(){
 		editTaskToServer(data.task);
 	};  	
 
-// use Ajax to push request 
-	var $history = $("#history");
-	var $getHistory= $("#button-get-history");
-	$getHistory.click(getAllActions);
-	function getAllActions(){
-		console.log("=======>  get all action \n");
-		$.ajax({
-            url: "http://localhost:3000/api/actions",
-            dataType: "json",
-            type: 'GET',
-            contentType: 'application/json',
-            success: function(result) {
-            	$history.find("li").remove();
-                $.each(result, function(i, value){
-                	console.log(value);
-                	$history.append("<li class='list-group-item'>"+i+" : You "+value.action_type + " *"+ value.description +"* at "+value.activation_time+"</li>");
-                });
-            }
+// use Ajax to push request 	
+
+	function showHistory(history){
+		$history.find("li").remove();
+		var listAcctionHisoty = "";
+        $.each(history, function(i, value){
+        	listAcctionHisoty += ("<li class='list-group-item'>"+i+" : You "+value.action_type + " *"+ value.description +"* at "+value.activation_time+"</li>");
         });
+        $history.append(listAcctionHisoty);
 	};
+
+	function getHistory(){
+		var url = "http://localhost:3000/api/actions";
+		console.log("using getJSON");
+		return $.getJSON(url);
+	}	
 	
 	function addAction(action){
-		console.log("=======> post action ")
-		$.ajax({
+		return $.ajax({
 			url: "http://localhost:3000/api/actions",
 			dataType: "json",
 			type:'post',
 			contentType: 'application/json',
-			data: JSON.stringify(action),
-			success: function(data,  textStatus, jQxhr){
-				console.log(data);
-			},
-			error: function( jqXhr, textStatus, errorThrown ){
-		        console.log( errorThrown );
-		    }
+			data: JSON.stringify(action)
 		});
-	};
+	}
 
 	function editTaskToServer(task){
-		console.log("=======> edit task ")
-		$.ajax({
+		return $.ajax({
 			url: "http://localhost:3000/api/tasks",
 			dataType: "json",
 			type:'put',
 			contentType: 'application/json',
-			data: JSON.stringify(task),
-			success: function(data,  textStatus, jQxhr){
-				console.log(data);
-			},
-			error: function( jqXhr, textStatus, errorThrown ){
-		        console.log( errorThrown );
-		    }
+			data: JSON.stringify(task)			
 		});
 	}
 
 	function addTaskToServer(task){
-		console.log("=======> add task ");
-		$.ajax({
+		return $.ajax({
 			url: "http://localhost:3000/api/tasks",
 			dataType: "json",
 			type:'post',
 			contentType: 'application/json',
-			data: JSON.stringify(task),
-			success: function(data,  textStatus, jQxhr){
-				var $newItem = $("#list-tasks a:first-child");
-				$newItem.find("label").text(data.insertedIds[0]);
-				console.log(data.insertedIds[0]);
-			},
-			error: function( jqXhr, textStatus, errorThrown ){
-		        console.log( errorThrown );
-		    }
+			data: JSON.stringify(task)			
 		});
 	}
 } //toDoFeature
