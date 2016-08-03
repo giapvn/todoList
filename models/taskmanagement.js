@@ -14,21 +14,19 @@ TaskManagement.prototype.insertTask = function(task, callback){
 	collection.insert(task).then(insertTaskSuccess).catch(insertTaskFalse);
 };
 
-var notifyConvertToArraySuccess = function(tasks){
-	if(tasks.length == 0){
-		console.log("cannot found");
-	}else{
-		console.log(tasks);
-	}
-	return callback(false, tasks);
-};
-
-var notifyConvertToArrayFail = function(err){
-	return callback(true, null);
-}
-
 TaskManagement.prototype.getTasks = function(queryString,callback){
 	var collection = this.connection.collection('task');
+	var notifyConvertToArraySuccess = function(tasks){
+		if(tasks.length == 0){
+			console.log("cannot found");
+		}else{
+			console.log(tasks);
+		}
+		return callback(false, tasks);
+	};
+	var notifyConvertToArrayFail = function(err){
+		return callback(true, null);
+	};
 	collection.find(queryString).toArray()
 		.then(notifyConvertToArraySuccess)
 		.catch(notifyConvertToArrayFail);
