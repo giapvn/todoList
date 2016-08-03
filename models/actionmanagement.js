@@ -10,10 +10,13 @@ ActionManagement.prototype.insertAction = function(action, callback){
 		action_type: action.getActionType(),
 		activation_time: action.getActivationTime(),
 	};
-	
-	collection.insert(newAction,function(err,result){
-		return callback(err, result);
-	});
+	var insertActionSuccess = function(result){
+		return callback(false,result);
+	};
+	var insertActionFalse = function(err){
+		return callback(true,null);
+	}
+	collection.insert(newAction).then(insertSuccess).catch(insertFalse);
 }
 
 
