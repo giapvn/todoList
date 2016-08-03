@@ -11,19 +11,24 @@ TaskManagement.prototype.insertTask = function(task, callback){
 	});
 };
 
+var notifyConvertToArraySuccess = function(tasks){
+	if(tasks.length == 0){
+		console.log("cannot found");
+	}else{
+		console.log(tasks);
+	}
+	return callback(false, tasks);
+};
+
+var notifyConvertToArrayFail = function(err){
+	return callback(true, null);
+}
+
 TaskManagement.prototype.getTasks = function(queryString,callback){
 	var collection = this.connection.collection('task');
 	collection.find(queryString).toArray()
-		.then(function(tasks){
-			if(tasks.length == 0){
-				console.log("cannot found");
-			}else{
-				console.log(tasks);
-			}
-			return callback(false, tasks);
-		}).catch(function(err){
-			return callback(true, null);
-		});
+		.then(notifyConvertToArraySuccess)
+		.catch(notifyConvertToArrayFail);
 };
 
 TaskManagement.prototype.editTask = function(selector, doc, callback){
