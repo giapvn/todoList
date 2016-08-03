@@ -1,4 +1,3 @@
-
 ;
 (function(functionAsParam){
 	functionAsParam(window.jQuery, window, document);
@@ -55,7 +54,8 @@ function toDoFeature(){
 					deleted: false
 				}
 			}
-		};
+		};			
+		
 		$listTasks.trigger("task:add", data);
 	};
 
@@ -101,8 +101,8 @@ function toDoFeature(){
 					"<button class='pull-right btn-default btn-delete-task-item'>X</button>"+
 				"</a>"
 	    	);
+		    var $newItem = $("#list-tasks a:first-child");
 
-	    var $newItem = $("#list-tasks a:first-child");
 
 	    $newItem.find("button").on('click', toTriggerDeleteTask);
 	    $newItem.find("input").on('change',doneTask);
@@ -184,8 +184,6 @@ function toDoFeature(){
 		editTaskToServer(data.task);
 	};  	
 
-// use Ajax to push request 	
-
 	function showHistory(history){
 		$history.find("li").remove();
 		var listAcctionHisoty = "";
@@ -194,6 +192,8 @@ function toDoFeature(){
         });
         $history.append(listAcctionHisoty);
 	};
+
+// use Ajax to push request 	
 
 	function getHistory(){
 		var url = "http://localhost:3000/api/actions";
@@ -231,3 +231,4 @@ function toDoFeature(){
 		});
 	}
 } //toDoFeature
+

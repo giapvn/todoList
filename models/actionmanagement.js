@@ -3,30 +3,30 @@ function ActionManagement(connection){
 };
 
 ActionManagement.prototype.insertAction = function(action, callback){
-
 	var collection = this.connection.collection('action');
 	var newAction = {
 		description: action.getDescription(),
 		action_type: action.getActionType(),
 		activation_time: action.getActivationTime(),
 	};
-	
-	collection.insert(newAction,function(err,result){
-		return callback(err, result);
-	});
+	var insertActionSuccess = function(result){
+		return callback(false,result);
+	};
+	var insertActionFalse = function(err){
+		return callback(true,null);
+	}
+	collection.insert(newAction).then(insertSuccess).catch(insertFalse);
 }
-
 
 ActionManagement.prototype.getActions = function(callback){
 	var collection = this.connection.collection('action');
-	var actions = collection.find().toArray(function(err, result){
-		// var result = "Successful!";
-		if(!err){
+	var actions = collection.find().toArray()
+		.then(function(result){
 			return callback(false, result);
-		}
-		return callback(true, null);
-	});
+		})
+		.catch(function(err){
+			return callback(err, null);
+		});
 };
-
 
 module.exports = ActionManagement;
