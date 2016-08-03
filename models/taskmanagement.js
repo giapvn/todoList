@@ -5,10 +5,13 @@ function TaskManagement(connection){
 TaskManagement.prototype.insertTask = function(task, callback){
 
 	var collection = this.connection.collection('task');
-		
-	collection.insert(task,function(err,result){
-		return callback(err, result);
-	});
+	var insertTaskSuccess = function (result){
+		return callback(false,result);
+	};
+	var insertTaskFalse = function(err){
+		return callback(true,null);
+	};	
+	collection.insert(task).then(insertTaskSuccess).catch(insertTaskFalse);
 };
 
 var notifyConvertToArraySuccess = function(tasks){
@@ -33,9 +36,13 @@ TaskManagement.prototype.getTasks = function(queryString,callback){
 
 TaskManagement.prototype.editTask = function(selector, doc, callback){
 	var collection = this.connection.collection('task');
-	collection.updateOne(selector, {$set: doc},function(err, result){
-		return callback(err, result);
-	});
+	var editTaskSuccess = function (result){
+		return callback(false,result);
+	};
+	var editTaskFalse = function(err){
+		return callback(true,null);
+	};
+	collection.updateOne(selector, {$set: doc}).then(editTaskSuccess).catch(editTaskFalse);
 };
 
 module.exports = TaskManagement;

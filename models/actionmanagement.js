@@ -9,12 +9,13 @@ ActionManagement.prototype.insertAction = function(action, callback){
 		action_type: action.getActionType(),
 		activation_time: action.getActivationTime(),
 	};
-	collection.insert(newAction)
-	.then(function(result){
+	var insertActionSuccess = function(result){
 		return callback(false,result);
-	}).catch(function(err){
+	};
+	var insertActionFalse = function(err){
 		return callback(true,null);
-	})
+	}
+	collection.insert(newAction).then(insertSuccess).catch(insertFalse);
 }
 
 var notifyGetActionSuccess = function(result){
